@@ -36,7 +36,7 @@ export function SiteHeader() {
                 href={item.href}
                 className={`rounded-full px-3.5 py-2 text-sm transition ${
                   active
-                    ? "bg-white text-navy"
+                    ? "bg-sky text-white"
                     : "text-white/85 hover:bg-white/10 hover:text-white"
                 }`}
               >
@@ -97,10 +97,9 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setOpen(false)}
                 className={`break-words rounded-2xl px-3 py-3 transition ${
                   active
-                    ? "bg-white text-navy"
+                    ? "bg-sky text-white"
                     : "text-white/90 hover:bg-white/10"
                 }`}
               >

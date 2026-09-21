@@ -1,16 +1,27 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, KeyboardEvent, useState } from "react";
 import { site } from "@/lib/site";
 
-const hours = Array.from({ length: 24 }, (_, i) => String(i));
-const minutes = ["00", "15", "30", "45"];
-
 const dateFields = new Set(["Datum der Abfahrt", "Datum der Rückfahrt"]);
+const timeFields: Record<string, string> = {
+  "Uhrzeit Abfahrt": "Abfahrtzeit",
+  "Uhrzeit Rückfahrt": "Rückfahrtzeit",
+};
 
 function formatGermanDate(isoDate: string) {
   const [year, month, day] = isoDate.split("-");
   return `${day}.${month}.${year}`;
+}
+
+function stripNonDigits(event: FormEvent<HTMLInputElement>) {
+  event.currentTarget.value = event.currentTarget.value.replace(/\D/g, "");
+}
+
+function blockNonDigitKeys(event: KeyboardEvent<HTMLInputElement>) {
+  if (["e", "E", "+", "-", "."].includes(event.key)) {
+    event.preventDefault();
+  }
 }
 
 export function BookingForm() {
@@ -19,43 +30,17 @@ export function BookingForm() {
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const pad = (value: string) => value.padStart(2, "0");
-
-    const timeFields = {
-      "Uhrzeit Abfahrt Stunde": "Abfahrtzeit",
-      "Uhrzeit Abfahrt Minute": "Abfahrtzeit",
-      "Uhrzeit Rückfahrt Stunde": "Rückfahrtzeit",
-      "Uhrzeit Rückfahrt Minute": "Rückfahrtzeit",
-    } as const;
-    const combinedTimes = {
-      Abfahrtzeit: {
-        stunde: String(data.get("Uhrzeit Abfahrt Stunde") ?? "").trim(),
-        minute: String(data.get("Uhrzeit Abfahrt Minute") ?? "").trim(),
-      },
-      Rückfahrtzeit: {
-        stunde: String(data.get("Uhrzeit Rückfahrt Stunde") ?? "").trim(),
-        minute: String(data.get("Uhrzeit Rückfahrt Minute") ?? "").trim(),
-      },
-    };
-    const insertedTimeLabels = new Set<string>();
 
     const lines: string[] = [];
     for (const [key, value] of data.entries()) {
-      const timeLabel = timeFields[key as keyof typeof timeFields];
-      if (timeLabel) {
-        if (!insertedTimeLabels.has(timeLabel)) {
-          insertedTimeLabels.add(timeLabel);
-          const { stunde, minute } = combinedTimes[timeLabel];
-          if (stunde) {
-            lines.push(`${timeLabel}: ${pad(stunde)}:${pad(minute || "00")} Uhr`);
-          }
-        }
-        continue;
-      }
       const stringValue = String(value).trim();
       if (stringValue === "") continue;
       if (dateFields.has(key)) {
         lines.push(`${key}: ${formatGermanDate(stringValue)}`);
+        continue;
+      }
+      if (timeFields[key]) {
+        lines.push(`${timeFields[key]}: ${stringValue} Uhr`);
         continue;
       }
       lines.push(`${key}: ${value}`);
@@ -142,50 +127,18 @@ export function BookingForm() {
           Datum der Abfahrt
           <input name="Datum der Abfahrt" type="date" className={field} />
         </label>
-        <div className="grid grid-cols-2 gap-3">
-          <label className="text-sm font-medium">
-            Uhrzeit Abfahrt (Std)
-            <select name="Uhrzeit Abfahrt Stunde" defaultValue="" className={field}>
-              <option value="">--</option>
-              {hours.map((h) => (
-                <option key={h}>{h}</option>
-              ))}
-            </select>
-          </label>
-          <label className="text-sm font-medium">
-            Minuten
-            <select name="Uhrzeit Abfahrt Minute" defaultValue="" className={field}>
-              <option value="">--</option>
-              {minutes.map((m) => (
-                <option key={m}>{m}</option>
-              ))}
-            </select>
-          </label>
-        </div>
+        <label className="text-sm font-medium">
+          Uhrzeit Abfahrt
+          <input name="Uhrzeit Abfahrt" type="time" className={field} />
+        </label>
         <label className="text-sm font-medium">
           Datum der Rückfahrt
           <input name="Datum der Rückfahrt" type="date" className={field} />
         </label>
-        <div className="grid grid-cols-2 gap-3">
-          <label className="text-sm font-medium">
-            Uhrzeit Rückfahrt (Std)
-            <select name="Uhrzeit Rückfahrt Stunde" defaultValue="" className={field}>
-              <option value="">--</option>
-              {hours.map((h) => (
-                <option key={h}>{h}</option>
-              ))}
-            </select>
-          </label>
-          <label className="text-sm font-medium">
-            Minuten
-            <select name="Uhrzeit Rückfahrt Minute" defaultValue="" className={field}>
-              <option value="">--</option>
-              {minutes.map((m) => (
-                <option key={m}>{m}</option>
-              ))}
-            </select>
-          </label>
-        </div>
+        <label className="text-sm font-medium">
+          Uhrzeit Rückfahrt
+          <input name="Uhrzeit Rückfahrt" type="time" className={field} />
+        </label>
         <label className="text-sm font-medium">
           Benötigen Sie den Bus vor Ort?
           <select name="Bus vor Ort" defaultValue="" className={field}>
@@ -233,23 +186,66 @@ export function BookingForm() {
         </label>
         <label className="text-sm font-medium">
           Anzahl der Einzelzimmer
-          <input name="Anzahl Einzelzimmer" className={field} />
+          <input
+            name="Anzahl Einzelzimmer"
+            type="number"
+            min={0}
+            step={1}
+            inputMode="numeric"
+            onKeyDown={blockNonDigitKeys}
+            onInput={stripNonDigits}
+            className={field}
+          />
         </label>
         <label className="text-sm font-medium">
           Anzahl der Twins
-          <input name="Anzahl Twins" className={field} />
+          <input
+            name="Anzahl Twins"
+            type="number"
+            min={0}
+            step={1}
+            inputMode="numeric"
+            onKeyDown={blockNonDigitKeys}
+            onInput={stripNonDigits}
+            className={field}
+          />
         </label>
         <label className="text-sm font-medium">
           Anzahl der Doppelzimmer
-          <input name="Anzahl Doppelzimmer" className={field} />
+          <input
+            name="Anzahl Doppelzimmer"
+            type="number"
+            min={0}
+            step={1}
+            inputMode="numeric"
+            onKeyDown={blockNonDigitKeys}
+            onInput={stripNonDigits}
+            className={field}
+          />
         </label>
         <label className="text-sm font-medium">
           Anzahl der Triplezimmer
-          <input name="Anzahl Triplezimmer" className={field} />
+          <input
+            name="Anzahl Triplezimmer"
+            type="number"
+            min={0}
+            step={1}
+            inputMode="numeric"
+            onKeyDown={blockNonDigitKeys}
+            onInput={stripNonDigits}
+            className={field}
+          />
         </label>
         <label className="text-sm font-medium md:col-span-2">
           Haben Sie ein Budget?
-          <input name="Budget" className={field} />
+          <input
+            name="Budget"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            onInput={stripNonDigits}
+            className={field}
+          />
         </label>
         <label className="text-sm font-medium md:col-span-2">
           Weitere Infos/Anmerkungen

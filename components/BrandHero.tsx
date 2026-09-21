@@ -7,7 +7,7 @@ export function BrandHero({ title, kicker }: { title: string; kicker?: string })
             {kicker}
           </p>
         ) : null}
-        <h1 className="font-serif text-4xl text-white sm:text-5xl lg:text-6xl">
+        <h1 className="break-words font-serif text-4xl text-white sm:text-5xl lg:text-6xl">
           {title}
         </h1>
       </div>

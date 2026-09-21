@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function DatenschutzPage() {
   return (
     <main>
-      <BrandHero title="DATENSCHUTZHINWEISE" />
+      <BrandHero title="Datenschutzhinweise" />
       <article className="mx-auto max-w-3xl px-4 py-16 text-base leading-relaxed sm:px-6">
         <h2 className="font-serif text-2xl text-navy">
           I. Informationen über die Verarbeitung Ihrer Daten gemäß Art. 13 der
