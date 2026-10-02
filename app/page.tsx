@@ -37,8 +37,20 @@ export default function Home() {
       />
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <article className="grid overflow-hidden rounded-[28px] border border-navy/10 bg-white shadow-[0_12px_40px_rgba(11,39,68,0.06)] md:grid-cols-[2fr_3fr]">
-          <div className="relative min-h-64 md:min-h-full">
+        <ul className="grid gap-6 md:grid-cols-2 md:gap-x-12">
+          {intro.map((text) => (
+            <li key={text} className="flex gap-4">
+              <span
+                aria-hidden="true"
+                className="mt-[0.7em] size-2.5 shrink-0 rounded-full bg-sky"
+              />
+              <p className="text-lg leading-relaxed text-navy">{text}</p>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-14 grid overflow-hidden rounded-[32px] bg-navy text-white md:min-h-[26rem] md:grid-cols-[2fr_3fr]">
+          <div className="relative min-h-72 md:min-h-full">
             <ScrollPanImage
               src="/image_01.png"
               alt="Reisebus der Heess Reisen GmbH"
@@ -47,33 +59,21 @@ export default function Home() {
               className="object-cover"
             />
           </div>
-          <ul className="flex flex-col justify-center gap-6 p-7 sm:p-10">
-            {intro.map((text) => (
-              <li key={text} className="flex gap-4">
-                <span
-                  aria-hidden="true"
-                  className="mt-[0.7em] size-2.5 shrink-0 rounded-full bg-sky"
-                />
-                <p className="text-lg leading-relaxed text-navy">{text}</p>
-              </li>
-            ))}
-          </ul>
-        </article>
-
-        <div className="mt-14 overflow-hidden rounded-[32px] bg-navy px-6 py-12 text-center text-white sm:px-12">
-          <p className="font-serif text-3xl sm:text-4xl">
-            Fragen Sie jetzt unverbindlich an!
-          </p>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
-            Kontaktieren Sie uns und lassen Sie sich ein persönliches Angebot
-            erstellen. Nutzen Sie dafür gerne unser Buchungsformular.
-          </p>
-          <Link
-            href="/kontakt"
-            className="mt-8 inline-block max-w-full rounded-full bg-accent px-8 py-3 font-semibold transition hover:brightness-110"
-          >
-            Zum Buchungsformular
-          </Link>
+          <div className="flex flex-col items-center justify-center px-6 py-12 text-center sm:px-12">
+            <p className="font-serif text-3xl sm:text-4xl">
+              Fragen Sie jetzt unverbindlich an!
+            </p>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+              Kontaktieren Sie uns und lassen Sie sich ein persönliches Angebot
+              erstellen. Nutzen Sie dafür gerne unser Buchungsformular.
+            </p>
+            <Link
+              href="/kontakt"
+              className="mt-8 inline-block max-w-full rounded-full bg-accent px-8 py-3 font-semibold transition hover:brightness-110"
+            >
+              Zum Buchungsformular
+            </Link>
+          </div>
         </div>
       </section>
 
