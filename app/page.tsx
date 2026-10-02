@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandHero } from "@/components/BrandHero";
 import { ContactStrip } from "@/components/ContactStrip";
+import { ScrollFrameAnimation } from "@/components/ScrollFrameAnimation";
 import { ScrollPanImage } from "@/components/ScrollPanImage";
 
 const intro = [
@@ -23,6 +24,15 @@ export default function Home() {
       <BrandHero
         kicker="Herzlich Willkommen bei"
         title="Heess Reisen GmbH"
+      />
+
+      <ScrollFrameAnimation
+        dir="/car_tilt"
+        frameCount={96}
+        width={1284}
+        height={716}
+        videoWidth="min(70vw, 852px)"
+        label="Reisebus, Doppeldecker und Kleinbus der Heess Reisen GmbH"
       />
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
