@@ -28,10 +28,11 @@ export default function Home() {
 
       <ScrollFrameAnimation
         dir="/car_tilt"
-        frameCount={96}
+        frameCount={48}
         width={1284}
         height={716}
         videoWidth="min(70vw, 852px)"
+        mobileVideoWidth="97vw"
         label="Reisebus, Doppeldecker und Kleinbus der Heess Reisen GmbH"
       />
 

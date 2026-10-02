@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { type CSSProperties, useEffect, useRef } from "react";
 
 type ScrollFrameAnimationProps = {
   /** Ordner unter /public mit frame_000.webp, frame_001.webp, … */
@@ -9,8 +9,10 @@ type ScrollFrameAnimationProps = {
   /** Pixelmaße der Einzelbilder */
   width: number;
   height: number;
-  /** Angezeigte Videobreite als CSS-Länge, z. B. "min(70vw, 851px)" */
+  /** Angezeigte Videobreite ab md als CSS-Länge, z. B. "min(70vw, 852px)" */
   videoWidth: string;
+  /** Angezeigte Videobreite unterhalb von md */
+  mobileVideoWidth: string;
   label: string;
 };
 
@@ -81,9 +83,9 @@ function createEdge(
 
 // Spielt eine Bildfolge passend zur Scrollposition ab: runterscrollen spielt
 // vorwärts, hochscrollen rückwärts, ohne Scrollen bleibt das Bild stehen.
-// Erster Frame, wenn die Unterkante am unteren Fensterrand liegt (oder am
-// Seitenanfang, falls sie dort schon sichtbar ist), letzter Frame, wenn das
-// Video zu 30 % hinter dem Header verschwunden ist.
+// Erster Frame an der Ursprungsposition (Seitenanfang, tiefster Punkt des
+// Videos im Fenster), letzter Frame, wenn nur noch 70 % sichtbar sind, also
+// 30 % hinter dem Header verschwunden.
 // Das Video steht mittig in einem vollbreiten Band; links und rechts wird die
 // äußerste Pixelspalte des aktuellen Frames gestreckt, damit der Hintergrund
 // nahtlos zum Video passt.
@@ -93,6 +95,7 @@ export function ScrollFrameAnimation({
   width,
   height,
   videoWidth,
+  mobileVideoWidth,
   label,
 }: ScrollFrameAnimationProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -142,9 +145,13 @@ export function ScrollFrameAnimation({
 
     const resize = () => {
       const dpr = window.devicePixelRatio || 1;
-      canvas.width = Math.round(canvas.clientWidth * dpr);
-      canvas.height = Math.round(canvas.clientHeight * dpr);
+      const w = Math.round(canvas.clientWidth * dpr);
+      const h = Math.round(canvas.clientHeight * dpr);
+      if (w === canvas.width && h === canvas.height) return false;
+      canvas.width = w;
+      canvas.height = h;
       drawn = -1;
+      return true;
     };
 
     frames = Array.from({ length: reduceMotion ? 1 : frameCount }, (_, i) => {
@@ -162,15 +169,9 @@ export function ScrollFrameAnimation({
       const rect = canvas.getBoundingClientRect();
       const top = rect.top + window.scrollY;
       const headerHeight = document.querySelector("header")?.offsetHeight ?? 0;
-      // Unterkante am unteren Fensterrand bzw. 30 % hinter dem Header
-      const bottomAtViewportBottom = top + rect.height - window.innerHeight;
-      const hiddenBehindHeader = top - headerHeight + rect.height * 0.3;
-      const start = Math.max(
-        Math.min(bottomAtViewportBottom, hiddenBehindHeader),
-        0,
-      );
-      const end = Math.max(bottomAtViewportBottom, hiddenBehindHeader, start + 1);
-      const progress = (window.scrollY - start) / (end - start);
+      // Scrollweg, bis 30 % des Videos hinter dem Header liegen
+      const end = Math.max(top - headerHeight + rect.height * 0.3, 1);
+      const progress = window.scrollY / end;
       return Math.round(Math.min(Math.max(progress, 0), 1) * (frameCount - 1));
     };
 
@@ -183,21 +184,24 @@ export function ScrollFrameAnimation({
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
     };
-    const onResize = () => {
-      resize();
-      onScroll();
-    };
+    // Größe der Zeichenfläche folgt dem Element (Breakpoints, Scrollbar,
+    // Pixeldichte); nach einer Änderung sofort neu zeichnen, da sie geleert wird.
+    const observer = new ResizeObserver(() => {
+      if (resize()) update();
+    });
 
     resize();
     update();
 
-    window.addEventListener("resize", onResize);
+    observer.observe(canvas);
+    window.addEventListener("resize", onScroll);
     if (!reduceMotion) {
       window.addEventListener("scroll", onScroll, { passive: true });
     }
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", onResize);
+      observer.disconnect();
+      window.removeEventListener("resize", onScroll);
       window.removeEventListener("scroll", onScroll);
     };
   }, [dir, frameCount, width, height]);
@@ -207,8 +211,14 @@ export function ScrollFrameAnimation({
       ref={canvasRef}
       role="img"
       aria-label={label}
-      className="block w-full"
-      style={{ height: `calc(${videoWidth} * ${height / width})` }}
+      className="block h-[calc(var(--video-mobile)*var(--video-ratio))] w-full md:h-[calc(var(--video-desktop)*var(--video-ratio))]"
+      style={
+        {
+          "--video-mobile": mobileVideoWidth,
+          "--video-desktop": videoWidth,
+          "--video-ratio": height / width,
+        } as CSSProperties
+      }
     />
   );
 }
