@@ -22,6 +22,7 @@ const frameSrc = (dir: string, index: number) =>
 const EDGE_SAMPLE = 8; // gemittelte Randspalten
 const EDGE_BLUR = 24; // vertikaler Glättungsradius in Bildpixeln
 const EDGE_BLEND = 24; // weicher Übergang ins Video in Bildpixeln
+const ZOOM = 0.1; // Vergrößerung bis zum letzten Frame
 
 // Erzeugt für eine Bildseite einen Streifen in Randfarbe: Spalte 0 deckend
 // (wird über den Seitenrand gestreckt), danach Ausblendung ins Video. Die
@@ -128,18 +129,24 @@ export function ScrollFrameAnimation({
 
       const cw = canvas.width;
       const ch = canvas.height;
-      const scale = ch / height;
-      const vw = Math.min(width * scale, cw);
+      // Beim Runterscrollen leicht hineinzoomen; die Zeichenfläche bleibt gleich groß
+      const zoom = 1 + ZOOM * (current / Math.max(frameCount - 1, 1));
+      const scale = (ch / height) * zoom;
+      const vw = width * scale;
+      const vh = ch * zoom;
       const vx = (cw - vw) / 2;
+      const vy = (ch - vh) / 2;
       const blend = EDGE_BLEND * scale;
 
-      // Seitenränder: deckende Randspalte gestreckt
-      ctx.drawImage(edge.left, 0, 0, 1, height, 0, 0, Math.ceil(vx) + 1, ch);
-      ctx.drawImage(edge.right, EDGE_BLEND - 1, 0, 1, height, Math.floor(vx + vw) - 1, 0, cw - vx - vw + 2, ch);
+      // Seitenränder: deckende Randspalte gestreckt, zeilengenau zum Video
+      if (vx > 0) {
+        ctx.drawImage(edge.left, 0, 0, 1, height, 0, vy, Math.ceil(vx) + 1, vh);
+        ctx.drawImage(edge.right, EDGE_BLEND - 1, 0, 1, height, Math.floor(vx + vw) - 1, vy, cw - vx - vw + 2, vh);
+      }
       // Video, darüber weicher Übergang an beiden Kanten
-      ctx.drawImage(img, vx, 0, vw, ch);
-      ctx.drawImage(edge.left, vx, 0, blend, ch);
-      ctx.drawImage(edge.right, vx + vw - blend, 0, blend, ch);
+      ctx.drawImage(img, vx, vy, vw, vh);
+      ctx.drawImage(edge.left, vx, vy, blend, vh);
+      ctx.drawImage(edge.right, vx + vw - blend, vy, blend, vh);
       drawn = current;
     };
 

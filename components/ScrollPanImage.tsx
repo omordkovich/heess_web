@@ -5,6 +5,10 @@ import { useEffect, useRef } from "react";
 
 // Verschiebt den sichtbaren Bildausschnitt beim Scrollen horizontal:
 // Container unten im Viewport → rechter Bildrand, oben → linker Bildrand.
+// Zusätzlich zoomt das Bild beim Runterscrollen leicht hinein; der Container
+// braucht overflow-hidden, seine Größe bleibt unverändert.
+const ZOOM = 0.1;
+
 export function ScrollPanImage({ className, alt, ...props }: ImageProps) {
   const ref = useRef<HTMLImageElement>(null);
 
@@ -18,8 +22,9 @@ export function ScrollPanImage({ className, alt, ...props }: ImageProps) {
       frame = 0;
       const rect = img.getBoundingClientRect();
       const progress = rect.bottom / (window.innerHeight + rect.height);
-      const x = Math.min(Math.max(progress, 0), 1) * 100;
-      img.style.objectPosition = `${x}% 50%`;
+      const clamped = Math.min(Math.max(progress, 0), 1);
+      img.style.objectPosition = `${clamped * 100}% 50%`;
+      img.style.transform = `scale(${1 + ZOOM * (1 - clamped)})`;
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);

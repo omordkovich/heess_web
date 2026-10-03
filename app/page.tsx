@@ -50,7 +50,7 @@ export default function Home() {
         </ul>
 
         <div className="mt-14 grid overflow-hidden rounded-[32px] bg-navy text-white md:min-h-[26rem] md:grid-cols-[2fr_3fr]">
-          <div className="relative min-h-72 md:min-h-full">
+          <div className="relative min-h-72 overflow-hidden md:min-h-full">
             <ScrollPanImage
               src="/image_01.png"
               alt="Reisebus der Heess Reisen GmbH"
