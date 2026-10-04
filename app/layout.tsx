@@ -27,6 +27,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="de"
+      // Next.js schaltet smooth scroll beim Seitenwechsel ab, damit die neue
+      // Seite oben unter der Navbar beginnt
+      data-scroll-behavior="smooth"
       className={`${outfit.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-paper font-sans text-ink">

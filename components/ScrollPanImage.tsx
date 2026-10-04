@@ -8,33 +8,28 @@ const PAN_ROOM = 0.12; // zusätzliche Vergrößerung als Spielraum für "up"
 const BLUR = 10; // maximale Unschärfe in px
 const PAN_X = 0.3; // Anteil des seitlichen Spielraums für "right"/"left"
 const SHARP_FROM = 0.8; // ab diesem sichtbaren Anteil ist das Bild scharf
-const ZOOM_RESET_MS = 600; // Dauer der Rück-Animation bei zoomDownOnly
 
 type ScrollPanImageProps = ImageProps & {
   /** Bewegungsrichtung des Bildinhalts beim Runterscrollen */
   pan?: "right" | "left" | "up";
-  /** Unscharf und ausgeblendet, solange weniger als SHARP_FROM des Bildes sichtbar ist */
-  blur?: boolean;
   /**
-   * Zoom 90 % → 100 % nur beim Runterscrollen. Beim Hochscrollen bleibt er
-   * stehen, bis die Unterkante des Bildes unter den Fensterrand rutscht; dann
-   * animiert er zurück auf 90 %.
+   * Unscharf und ausgeblendet, solange weniger als SHARP_FROM des Bildes
+   * sichtbar ist; der Zoom läuft dann nur im scharfen Abschnitt
    */
-  zoomDownOnly?: boolean;
+  blur?: boolean;
 };
-
-const easeOut = (p: number) => 1 - (1 - p) ** 3;
 
 // Bewegt den sichtbaren Bildausschnitt beim Scrollen: Fortschritt 0, wenn der
 // Container unten ins Fenster kommt, 1, wenn er oben hinausgescrollt ist.
 // Dazu leichter Zoom und optional Unschärfe abhängig von der Sichtbarkeit.
-// Der Container braucht overflow-hidden, seine Größe bleibt unverändert.
+// Alles hängt nur an der Scrollposition, hoch- und runterscrollen sehen also
+// gleich aus, nur umgekehrt. Der Container braucht overflow-hidden, seine
+// Größe bleibt unverändert.
 export function ScrollPanImage({
   className,
   alt,
   pan = "right",
   blur = false,
-  zoomDownOnly = false,
   ...props
 }: ScrollPanImageProps) {
   const ref = useRef<HTMLImageElement>(null);
@@ -48,28 +43,24 @@ export function ScrollPanImage({
     // Container messen, nicht das transformierte Bild
     const box = img.parentElement ?? img;
 
-    let rect = box.getBoundingClientRect();
-    const progressOf = (r: DOMRect) =>
-      Math.min(Math.max(1 - r.bottom / (window.innerHeight + r.height), 0), 1);
-    // Zoomfortschritt: mit Unschärfe nur im scharfen Abschnitt (Einblenden fertig
-    // bis Ausblenden beginnt), damit Zoom und Unschärfe/Fade getrennt laufen
-    const zoomProgressOf = (r: DOMRect) => {
-      if (!blur) return progressOf(r);
-      const start = window.innerHeight - SHARP_FROM * r.height;
-      const end = SHARP_FROM * r.height - r.height;
-      const z = (start - r.top) / Math.max(start - end, 1);
-      return Math.min(Math.max(z, 0), 1);
-    };
-    let t = progressOf(rect);
-    let z = zoomProgressOf(rect);
-    let zoomT = z;
-    let lastZ = z;
-    let lastScrollY = window.scrollY;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const rect = box.getBoundingClientRect();
+      const progress = 1 - rect.bottom / (window.innerHeight + rect.height);
+      const t = Math.min(Math.max(progress, 0), 1);
 
-    const render = () => {
-      // Unschärfe über eine Ebene mit backdrop-filter: die spiegelt das Bild an
-      // den Kanten, es scheint also kein Hintergrund durch
+      // Zoomfortschritt: mit Unschärfe nur im scharfen Abschnitt (Einblenden
+      // fertig bis Ausblenden beginnt), damit Zoom und Unschärfe/Fade getrennt
+      // laufen
+      let z = t;
       if (blurLayer) {
+        const start = window.innerHeight - SHARP_FROM * rect.height;
+        const end = SHARP_FROM * rect.height - rect.height;
+        z = Math.min(Math.max((start - rect.top) / (start - end), 0), 1);
+
+        // Unschärfe über eine Ebene mit backdrop-filter: die spiegelt das Bild
+        // an den Kanten, es scheint also kein Hintergrund durch
         const visible =
           (Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0)) /
           rect.height;
@@ -85,10 +76,7 @@ export function ScrollPanImage({
         img.style.opacity = String(1 - fade);
       }
 
-      // zoomDownOnly: 90 % → 100 % der Bildgröße, bei 90 % deckt es genau
-      const zoom = zoomDownOnly
-        ? (1 - ZOOM + ZOOM * zoomT) / (1 - ZOOM)
-        : 1 + ZOOM * zoomT;
+      const zoom = 1 + ZOOM * z;
 
       if (pan === "up") {
         const scale = zoom * (1 + PAN_ROOM);
@@ -101,65 +89,19 @@ export function ScrollPanImage({
         img.style.transform = `scale(${zoom})`;
       }
     };
-
-    // Rück-Animation des Zooms (zeitbasiert, unabhängig vom Scrollen)
-    let resetFrame = 0;
-    const startReset = () => {
-      const from = zoomT;
-      const start = performance.now();
-      const step = (now: number) => {
-        const p = Math.min((now - start) / ZOOM_RESET_MS, 1);
-        zoomT = from * (1 - easeOut(p));
-        render();
-        resetFrame = p < 1 ? requestAnimationFrame(step) : 0;
-      };
-      resetFrame = requestAnimationFrame(step);
-    };
-    const stopReset = () => {
-      cancelAnimationFrame(resetFrame);
-      resetFrame = 0;
-    };
-
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      rect = box.getBoundingClientRect();
-      t = progressOf(rect);
-      z = zoomProgressOf(rect);
-      const delta = window.scrollY - lastScrollY;
-      lastScrollY = window.scrollY;
-
-      if (!zoomDownOnly) {
-        zoomT = z;
-      } else if (delta > 0 && z > lastZ) {
-        // Runter: vom aktuellen Stand so weiterzoomen, dass am Ende 100 % erreicht sind
-        stopReset();
-        zoomT += ((1 - zoomT) * (z - lastZ)) / (1 - lastZ);
-      } else if (
-        delta < 0 &&
-        rect.bottom > window.innerHeight &&
-        zoomT > 0 &&
-        !resetFrame
-      ) {
-        startReset();
-      }
-      lastZ = z;
-      render();
-    };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
     };
 
-    render();
+    update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => {
       cancelAnimationFrame(frame);
-      stopReset();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [pan, blur, zoomDownOnly]);
+  }, [pan, blur]);
 
   return (
     <>
