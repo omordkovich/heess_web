@@ -85,7 +85,7 @@ export default function Home() {
               sizes="(min-width: 1280px) 512px, (min-width: 768px) 40vw, 100vw"
               className="object-cover"
               pan="up"
-              zoomOut
+              zoomDownOnly
               blur
             />
           </div>
