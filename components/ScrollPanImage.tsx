@@ -51,9 +51,19 @@ export function ScrollPanImage({
     let rect = box.getBoundingClientRect();
     const progressOf = (r: DOMRect) =>
       Math.min(Math.max(1 - r.bottom / (window.innerHeight + r.height), 0), 1);
+    // Zoomfortschritt: mit Unschärfe nur im scharfen Abschnitt (Einblenden fertig
+    // bis Ausblenden beginnt), damit Zoom und Unschärfe/Fade getrennt laufen
+    const zoomProgressOf = (r: DOMRect) => {
+      if (!blur) return progressOf(r);
+      const start = window.innerHeight - SHARP_FROM * r.height;
+      const end = SHARP_FROM * r.height - r.height;
+      const z = (start - r.top) / Math.max(start - end, 1);
+      return Math.min(Math.max(z, 0), 1);
+    };
     let t = progressOf(rect);
-    let zoomT = t;
-    let lastT = t;
+    let z = zoomProgressOf(rect);
+    let zoomT = z;
+    let lastZ = z;
     let lastScrollY = window.scrollY;
 
     const render = () => {
@@ -115,15 +125,16 @@ export function ScrollPanImage({
       frame = 0;
       rect = box.getBoundingClientRect();
       t = progressOf(rect);
+      z = zoomProgressOf(rect);
       const delta = window.scrollY - lastScrollY;
       lastScrollY = window.scrollY;
 
       if (!zoomDownOnly) {
-        zoomT = t;
-      } else if (delta > 0 && t > lastT) {
-        // Runter: vom aktuellen Stand so weiterzoomen, dass oben 100 % erreicht sind
+        zoomT = z;
+      } else if (delta > 0 && z > lastZ) {
+        // Runter: vom aktuellen Stand so weiterzoomen, dass am Ende 100 % erreicht sind
         stopReset();
-        zoomT += ((1 - zoomT) * (t - lastT)) / (1 - lastT);
+        zoomT += ((1 - zoomT) * (z - lastZ)) / (1 - lastZ);
       } else if (
         delta < 0 &&
         rect.bottom > window.innerHeight &&
@@ -132,7 +143,7 @@ export function ScrollPanImage({
       ) {
         startReset();
       }
-      lastT = t;
+      lastZ = z;
       render();
     };
     const onScroll = () => {
