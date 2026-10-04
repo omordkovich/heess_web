@@ -52,7 +52,7 @@ export default function Home() {
         <div className="mt-14 grid overflow-hidden rounded-[32px] bg-navy text-white md:min-h-[26rem] md:grid-cols-[2fr_3fr]">
           <div className="relative min-h-72 overflow-hidden md:min-h-full">
             <ScrollPanImage
-              src="/image_01.png"
+              src="/image_01.webp"
               alt="Reisebus der Heess Reisen GmbH"
               fill
               sizes="(min-width: 1280px) 512px, (min-width: 768px) 40vw, 100vw"
@@ -75,30 +75,42 @@ export default function Home() {
             </Link>
           </div>
         </div>
-      </section>
 
-      <section className="bg-sand">
-        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-16 sm:px-6 lg:grid-cols-2">
-          <article className="rounded-[28px] bg-white p-8">
-            <h2 className="font-serif text-3xl text-navy">
-              Wir investieren viel Zeit in die Ausbildung unserer Fahrer.
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted">
-              Es ist uns extrem wichtig, dass unsere Fahrzeuge nur Führern mit
-              entsprechender Erfahrung, Ausbildungsniveau und Ortskenntnissen
-              überlassen werden.
-            </p>
-          </article>
-          <article className="rounded-[28px] bg-white p-8">
-            <h2 className="font-serif text-3xl text-navy">
-              Unsere Busse werden periodisch kontrolliert.
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted">
-              Ständige technische Kotrollen und Überprüfungen, um
-              sicherzustellen, dass unsere Fahrzeuge den Standards entsprechen
-              und sicher sind, sind für uns eine Selbstverständlichkeit.
-            </p>
-          </article>
+        <div className="mt-14 grid overflow-hidden rounded-[32px] border border-navy/10 bg-white shadow-[0_12px_40px_rgba(11,39,68,0.06)] md:min-h-[26rem] md:grid-cols-[3fr_2fr]">
+          <div className="relative min-h-72 overflow-hidden md:order-last md:min-h-full">
+            <ScrollPanImage
+              src="/image_02.webp"
+              alt="Mechaniker prüft den Motor eines Fahrzeugs"
+              fill
+              sizes="(min-width: 1280px) 512px, (min-width: 768px) 40vw, 100vw"
+              className="object-cover"
+              pan="up"
+              zoomOut
+              blur
+            />
+          </div>
+          <div className="flex flex-col justify-center gap-10 px-6 py-12 sm:px-12">
+            <div>
+              <h2 className="font-serif text-3xl text-navy">
+                Wir investieren viel Zeit in die Ausbildung unserer Fahrer.
+              </h2>
+              <p className="mt-4 text-lg leading-relaxed text-muted">
+                Es ist uns extrem wichtig, dass unsere Fahrzeuge nur Führern mit
+                entsprechender Erfahrung, Ausbildungsniveau und Ortskenntnissen
+                überlassen werden.
+              </p>
+            </div>
+            <div>
+              <h2 className="font-serif text-3xl text-navy">
+                Unsere Busse werden periodisch kontrolliert.
+              </h2>
+              <p className="mt-4 text-lg leading-relaxed text-muted">
+                Ständige technische Kotrollen und Überprüfungen, um
+                sicherzustellen, dass unsere Fahrzeuge den Standards entsprechen
+                und sicher sind, sind für uns eine Selbstverständlichkeit.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
