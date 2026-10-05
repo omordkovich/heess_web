@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { BrandHero } from "@/components/BrandHero";
-import { ContactStrip } from "@/components/ContactStrip";
 
 export const metadata: Metadata = {
   title: "Impressum",
@@ -122,7 +121,6 @@ export default function ImpressumPage() {
           Kontaktaufnahme bitte unsere obige E-Mail und Telefonnummer.
         </p>
       </article>
-      <ContactStrip />
     </main>
   );
 }

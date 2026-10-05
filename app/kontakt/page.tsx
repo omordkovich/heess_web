@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BookingForm } from "@/components/BookingForm";
 import { BrandHero } from "@/components/BrandHero";
-import { ContactStrip } from "@/components/ContactStrip";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -22,7 +21,6 @@ export default function KontaktPage() {
           <BookingForm />
         </div>
       </section>
-      <ContactStrip />
     </main>
   );
 }

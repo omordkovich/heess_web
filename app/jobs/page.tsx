@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandHero } from "@/components/BrandHero";
-import { ContactStrip } from "@/components/ContactStrip";
 
 export const metadata: Metadata = {
   title: "Jobs",
@@ -33,7 +32,6 @@ export default function JobsPage() {
           Jetzt anfragen
         </Link>
       </section>
-      <ContactStrip />
     </main>
   );
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { BrandHero } from "@/components/BrandHero";
-import { ContactStrip } from "@/components/ContactStrip";
 
 export const metadata: Metadata = {
   title: "AGBs",
@@ -31,7 +30,6 @@ export default function AgbsPage() {
           </a>
         </div>
       </section>
-      <ContactStrip />
     </main>
   );
 }

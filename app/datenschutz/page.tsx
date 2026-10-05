@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { BrandHero } from "@/components/BrandHero";
-import { ContactStrip } from "@/components/ContactStrip";
 
 export const metadata: Metadata = {
   title: "Datenschutz",
@@ -155,7 +154,6 @@ export default function DatenschutzPage() {
           erforderlich.
         </p>
       </article>
-      <ContactStrip />
     </main>
   );
 }

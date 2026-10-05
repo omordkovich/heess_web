@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandHero } from "@/components/BrandHero";
-import { ContactStrip } from "@/components/ContactStrip";
 
 export const metadata: Metadata = {
   title: "Touristik",
@@ -24,7 +23,6 @@ export default function TouristikPage() {
           Buchungsanfrage senden
         </Link>
       </section>
-      <ContactStrip />
     </main>
   );
 }

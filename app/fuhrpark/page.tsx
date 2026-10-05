@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandHero } from "@/components/BrandHero";
-import { ContactStrip } from "@/components/ContactStrip";
 
 export const metadata: Metadata = {
   title: "Fuhrpark & Services",
@@ -70,7 +69,6 @@ export default function FuhrparkPage() {
           Persönliches Angebot anfragen
         </Link>
       </section>
-      <ContactStrip />
     </main>
   );
 }
