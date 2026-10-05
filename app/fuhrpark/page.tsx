@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandHero } from "@/components/BrandHero";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Fuhrpark & Services",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Reisebus & Sprinter mit Fahrer mieten",
+  description:
+    "Bus mit Fahrer mieten in Troisdorf: VIP-8-Sitzer, Sprinter mit 19 Plätzen und Doppelstockbusse bis 91 Plätze für Betriebsausflüge, Schul- und Vereinsfahrten.",
+  path: "/fuhrpark",
+});
 
 const services = [
   "Transferfahrten",
@@ -20,14 +24,14 @@ const fleet = [
   { title: "Einstöckig", text: "einstöckigen -" },
   {
     title: "Doppelstock",
-    text: "doppelstöckgen Reisebussen mit bis zu 91 Sitzplätzen.",
+    text: "doppelstöckigen Reisebussen mit bis zu 91 Sitzplätzen.",
   },
 ];
 
 export default function FuhrparkPage() {
   return (
     <main>
-      <BrandHero title="Unser Leistungsangebot:" />
+      <BrandHero kicker="Unser Leistungsangebot" title="Fuhrpark & Services" />
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((item) => (
@@ -49,10 +53,7 @@ export default function FuhrparkPage() {
         </h2>
         <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {fleet.map((item) => (
-            <article
-              key={item.title}
-              className="rounded-[24px] bg-sand p-6"
-            >
+            <article key={item.title} className="rounded-[24px] bg-sand p-6">
               <h3 className="font-serif text-2xl text-navy">{item.title}</h3>
               <p className="mt-3 text-muted">* {item.text}</p>
             </article>

@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import { BrandHero } from "@/components/BrandHero";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Datenschutz",
-};
+  description:
+    "Datenschutzhinweise der Heess Reisen GmbH: wie wir personenbezogene Daten auf dieser Website verarbeiten und welche Rechte Sie haben.",
+  path: "/datenschutz",
+});
 
 export default function DatenschutzPage() {
   return (
@@ -65,7 +69,9 @@ export default function DatenschutzPage() {
           Die Daten werden auf der Grundlage des Art. 6 Abs. 1 Buchstabe f
           DS-GVO verarbeitet.
         </p>
-        <p className="mt-4 font-medium">c. Wie lange werden die Daten gespeichert?</p>
+        <p className="mt-4 font-medium">
+          c. Wie lange werden die Daten gespeichert?
+        </p>
         <p className="mt-3 text-muted">
           Die Daten werden gelöscht, sobald sie für die Erreichung des Zwecks
           ihrer Erhebung nicht mehr erforderlich sind. Bei der Bereitstellung
@@ -111,9 +117,9 @@ export default function DatenschutzPage() {
           personenbezogenen Daten gegen Datenschutzrecht verstößt, haben Sie
           nach Ar. 77 Abs. 1 DS-GVO das Recht, sich bei einer
           Datenschutzaufsichtsbehörde eigener Wahl zu beschweren. Hierzu gehört
-          auch die für den Verantwortlichen zuständige Datenschutzaufsichtsbehörde:
-          Landesbeauftragte für Datenschutz und Informationsfreiheit
-          Nordrhein-Westfalen,{" "}
+          auch die für den Verantwortlichen zuständige
+          Datenschutzaufsichtsbehörde: Landesbeauftragte für Datenschutz und
+          Informationsfreiheit Nordrhein-Westfalen,{" "}
           <a
             className="text-blue underline"
             href="https://www.ldi.nrw.de/kontakt/ihre-beschwerde"
@@ -132,12 +138,12 @@ export default function DatenschutzPage() {
           der Protokolldateien sind für den Betrieb der Internetseite zwingend
           erforderlich. Sie beruhen daher nicht auf einer Einwilligung nach Art.
           6 Abs. 1 Buchstabe a DS-GVO oder auf einem Vertrag nach Art. 6 Abs. 1
-          Buchstabe b DS-GVO, sondern sind nach Art. 6 Abs. 1 Buchstabe f
-          DS-GVO gerechtfertigt. Die Voraussetzungen des Art. 20 Abs. 1 DS GVO
-          sind demnach insoweit nicht erfüllt.
+          Buchstabe b DS-GVO, sondern sind nach Art. 6 Abs. 1 Buchstabe f DS-GVO
+          gerechtfertigt. Die Voraussetzungen des Art. 20 Abs. 1 DS GVO sind
+          demnach insoweit nicht erfüllt.
         </p>
         <h2 className="mt-10 font-serif text-2xl text-navy">
-          4 II. Recht auf Widerspruch gemäß Art. 21 Abs. 1 DS-GVO
+          II. Recht auf Widerspruch gemäß Art. 21 Abs. 1 DS-GVO
         </h2>
         <p className="mt-3 text-muted">
           Sie haben das Recht, aus Gründen, die sich aus Ihrer besonderen

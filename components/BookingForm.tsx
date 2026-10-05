@@ -1,20 +1,21 @@
 "use client";
 
-import { FormEvent, KeyboardEvent, useState } from "react";
+import Link from "next/link";
+import { InputEvent, KeyboardEvent, SubmitEvent, useState } from "react";
 import { site } from "@/lib/site";
 
 const dateFields = new Set(["Datum der Abfahrt", "Datum der Rückfahrt"]);
-const timeFields: Record<string, string> = {
-  "Uhrzeit Abfahrt": "Abfahrtzeit",
-  "Uhrzeit Rückfahrt": "Rückfahrtzeit",
-};
+const timeFields = new Map([
+  ["Uhrzeit Abfahrt", "Abfahrtzeit"],
+  ["Uhrzeit Rückfahrt", "Rückfahrtzeit"],
+]);
 
 function formatGermanDate(isoDate: string) {
   const [year, month, day] = isoDate.split("-");
   return `${day}.${month}.${year}`;
 }
 
-function stripNonDigits(event: FormEvent<HTMLInputElement>) {
+function stripNonDigits(event: InputEvent<HTMLInputElement>) {
   event.currentTarget.value = event.currentTarget.value.replace(/\D/g, "");
 }
 
@@ -27,7 +28,7 @@ function blockNonDigitKeys(event: KeyboardEvent<HTMLInputElement>) {
 export function BookingForm() {
   const [sent, setSent] = useState(false);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  function onSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
@@ -39,8 +40,9 @@ export function BookingForm() {
         lines.push(`${key}: ${formatGermanDate(stringValue)}`);
         continue;
       }
-      if (timeFields[key]) {
-        lines.push(`${timeFields[key]}: ${stringValue} Uhr`);
+      const timeLabel = timeFields.get(key);
+      if (timeLabel) {
+        lines.push(`${timeLabel}: ${stringValue} Uhr`);
         continue;
       }
       lines.push(`${key}: ${value}`);
@@ -253,6 +255,14 @@ export function BookingForm() {
         </label>
       </div>
       <p className="text-sm text-muted">* Pflichtfelder</p>
+      <p className="text-sm text-muted">
+        Ihre Angaben verwenden wir nur zur Bearbeitung Ihrer Anfrage. Mehr dazu
+        in unserer{" "}
+        <Link href="/datenschutz" className="text-blue underline">
+          Datenschutzerklärung
+        </Link>
+        .
+      </p>
       <button
         type="submit"
         className="inline-block max-w-full rounded-full bg-accent px-8 py-3 font-semibold text-white transition hover:brightness-110"

@@ -100,7 +100,10 @@ export function SiteHeader() {
               />
             </Link>
 
-            <nav className="hidden items-center gap-1 lg:flex">
+            <nav
+              aria-label="Hauptnavigation"
+              className="hidden items-center gap-1 lg:flex"
+            >
               {nav.map((item) => {
                 const active =
                   item.href === "/"
@@ -134,6 +137,7 @@ export function SiteHeader() {
               className="inline-flex h-10 w-10 shrink-0 items-center justify-center lg:hidden"
               aria-label="Menü"
               aria-expanded={open}
+              aria-controls="mobile-menu"
               onClick={() => setOpen((v) => !v)}
             >
               <span className="sr-only">Menü</span>
@@ -163,7 +167,11 @@ export function SiteHeader() {
             }`}
           >
             <div className="min-h-0 overflow-hidden">
-              <nav className="flex max-h-[calc(100dvh-5rem)] flex-col gap-1 overflow-y-auto overscroll-contain px-4 py-4">
+              <nav
+                id="mobile-menu"
+                aria-label="Hauptnavigation"
+                className="flex max-h-[calc(100dvh-5rem)] flex-col gap-1 overflow-y-auto overscroll-contain px-4 py-4"
+              >
                 {nav.map((item) => {
                   const active =
                     item.href === "/"

@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandHero } from "@/components/BrandHero";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Jobs",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Jobs als Busfahrer & Bürokraft in Troisdorf",
+  description:
+    "Jobs bei Heess Reisen in Troisdorf: Wir suchen Busfahrer und Bürokräfte für unser Busunternehmen. Jetzt unverbindlich bei uns anfragen.",
+  path: "/jobs",
+});
 
 export default function JobsPage() {
   return (
@@ -18,9 +22,7 @@ export default function JobsPage() {
               className="min-w-0 rounded-[28px] bg-navy p-8 text-white"
             >
               <h2 className="break-words font-serif text-3xl">{role}</h2>
-              <p className="mt-3 text-white/75">
-                Fragen Sie gerne bei uns an.
-              </p>
+              <p className="mt-3 text-white/75">Fragen Sie gerne bei uns an.</p>
             </article>
           ))}
         </div>

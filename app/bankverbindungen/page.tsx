@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import { BrandHero } from "@/components/BrandHero";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Bankverbindungen",
-};
+  description:
+    "Bankverbindungen der Heess Reisen GmbH in Troisdorf für Ihre Überweisung.",
+  path: "/bankverbindungen",
+});
 
 export default function BankPage() {
   return (

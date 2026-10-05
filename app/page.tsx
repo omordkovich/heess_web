@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandHero } from "@/components/BrandHero";
 import { ScrollFrameAnimation } from "@/components/ScrollFrameAnimation";
@@ -7,10 +8,18 @@ import { ScrollPanImage } from "@/components/ScrollPanImage";
 import image01 from "@/public/image_01.webp";
 import image02 from "@/public/image_02.webp";
 import image03 from "@/public/image_03.webp";
+import { pageMetadata } from "@/lib/seo";
+import { site } from "@/lib/site";
+
+export const metadata: Metadata = pageMetadata({
+  description:
+    "Busunternehmen in Troisdorf seit über 45 Jahren: Reisebusse, Sprinter und VIP-Fahrzeuge mit Fahrer für Transfers, Ausflüge und Busreisen in NRW und Europa.",
+  path: "/",
+});
 
 const intro = [
   "Seit über 45 Jahren fahren wir im Auftrag unserer Kunden in NRW, Deutschland, nahem und fernem Ausland.",
-  "Gerne beraten wie Sie und beantworten alle Ihre Fragen. Sprechen Sie unser Personal auf Ihre Anliegen an.",
+  "Gerne beraten wir Sie und beantworten alle Ihre Fragen. Sprechen Sie unser Personal auf Ihre Anliegen an.",
   "Ob ein kurzer Transfer oder eine mehrtägige Fahrt - es gibt keinen Auftrag, dem wir nicht gewachsen sind. Prüfen Sie unsere Möglichkeiten und unser Können!",
   "Zufriedene Kundschaft ist unsere oberste Priorität. Ihr Weg ist nämlich unser Ziel!",
 ];
@@ -22,17 +31,57 @@ const pillars = [
   "Auf die Wünsche unserer Kunden zugeschnittener Service",
 ];
 
+// Strukturierte Daten für Google: lokaler Betrieb mit Adresse, Kontakt und
+// Öffnungszeiten (wichtig für die lokale Suche und Google Maps)
+const localBusiness = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": `${site.url}/#business`,
+  name: site.name,
+  description:
+    "Busunternehmen in Troisdorf: Reisebusse, Sprinter und VIP-Fahrzeuge mit Fahrer für Transferfahrten, Betriebsausflüge, Schul- und Vereinsfahrten sowie mehrtägige Auslandsfahrten.",
+  url: site.url,
+  logo: `${site.url}/heess_logo_s-v2.webp`,
+  image: `${site.url}/og-image.jpg`,
+  telephone: site.phoneTel,
+  email: site.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.addressLine,
+    postalCode: site.postalCode,
+    addressLocality: site.locality,
+    addressRegion: "Nordrhein-Westfalen",
+    addressCountry: "DE",
+  },
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    opens: "10:00",
+    closes: "18:00",
+  },
+  areaServed: [
+    "Troisdorf",
+    "Bonn",
+    "Köln",
+    "Rhein-Sieg-Kreis",
+    "Nordrhein-Westfalen",
+  ],
+};
+
 export default function Home() {
   return (
     <main>
-      <BrandHero
-        kicker="Herzlich Willkommen bei"
-        title="Heess Reisen GmbH"
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(localBusiness).replace(/</g, "\\u003c"),
+        }}
       />
+      <BrandHero kicker="Herzlich Willkommen bei" title="Heess Reisen GmbH" />
 
       <ScrollFrameAnimation
         dir="/car_tilt"
-        frameCount={48}
+        frameCount={25}
         width={1284}
         height={716}
         videoWidth="min(70vw, 852px)"
@@ -142,10 +191,8 @@ export default function Home() {
             </ol>
           </div>
         </div>
-      </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <blockquote className="mx-auto max-w-3xl text-center">
+        <blockquote className="mx-auto mt-14 max-w-3xl text-center">
           <p className="font-serif text-2xl leading-snug text-navy">
             „Der wohlfeile, schnelle, sichere und regelmäßige Transport von
             Personen und Gütern ist einer der mächtigsten Hebel des

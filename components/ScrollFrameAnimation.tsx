@@ -113,7 +113,10 @@ export function ScrollFrameAnimation({
     let current = -1;
     let drawn = -1;
     let frames: HTMLImageElement[] = [];
-    const edges = new Map<number, { left: HTMLCanvasElement; right: HTMLCanvasElement }>();
+    const edges = new Map<
+      number,
+      { left: HTMLCanvasElement; right: HTMLCanvasElement }
+    >();
 
     const draw = () => {
       const img = frames[current];
@@ -141,7 +144,17 @@ export function ScrollFrameAnimation({
       // Seitenränder: deckende Randspalte gestreckt, zeilengenau zum Video
       if (vx > 0) {
         ctx.drawImage(edge.left, 0, 0, 1, height, 0, vy, Math.ceil(vx) + 1, vh);
-        ctx.drawImage(edge.right, EDGE_BLEND - 1, 0, 1, height, Math.floor(vx + vw) - 1, vy, cw - vx - vw + 2, vh);
+        ctx.drawImage(
+          edge.right,
+          EDGE_BLEND - 1,
+          0,
+          1,
+          height,
+          Math.floor(vx + vw) - 1,
+          vy,
+          cw - vx - vw + 2,
+          vh,
+        );
       }
       // Video, darüber weicher Übergang an beiden Kanten
       ctx.drawImage(img, vx, vy, vw, vh);
@@ -167,9 +180,27 @@ export function ScrollFrameAnimation({
       img.onload = () => {
         if (i === current) draw();
       };
-      img.src = frameSrc(dir, i);
+      // Zuerst nur Bild 1, der Rest folgt nach dem Laden der Seite
+      if (i === 0) img.src = frameSrc(dir, i);
       return img;
     });
+
+    // Restliche Bilder erst laden, wenn die Seite fertig ist, damit sie
+    // Inhalt und Ladezeit-Messung (LCP) nicht ausbremsen
+    let idle = 0;
+    const loadRest = () => {
+      frames.forEach((img, i) => {
+        if (i > 0) img.src = frameSrc(dir, i);
+      });
+    };
+    const scheduleRest = () => {
+      idle =
+        typeof window.requestIdleCallback === "function"
+          ? window.requestIdleCallback(loadRest, { timeout: 2000 })
+          : window.setTimeout(loadRest, 200);
+    };
+    if (document.readyState === "complete") scheduleRest();
+    else window.addEventListener("load", scheduleRest, { once: true });
 
     const frameForScroll = () => {
       if (reduceMotion) return 0;
@@ -207,6 +238,10 @@ export function ScrollFrameAnimation({
     }
     return () => {
       cancelAnimationFrame(raf);
+      if (typeof window.cancelIdleCallback === "function")
+        window.cancelIdleCallback(idle);
+      window.clearTimeout(idle);
+      window.removeEventListener("load", scheduleRest);
       observer.disconnect();
       window.removeEventListener("resize", onScroll);
       window.removeEventListener("scroll", onScroll);

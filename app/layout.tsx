@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Fraunces, Outfit } from "next/font/google";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { site } from "@/lib/site";
+import { DEFAULT_TITLE } from "@/lib/seo";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -15,12 +17,12 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(site.url),
   title: {
-    default: "Heess Reisen GmbH",
-    template: "%s | Heess Reisen GmbH",
+    default: DEFAULT_TITLE,
+    template: "%s | Heess Reisen",
   },
-  description:
-    "Seit über 45 Jahren Busreisen und Transfers in NRW, Deutschland und ins Ausland. Ihr Weg ist unser Ziel.",
+  applicationName: site.name,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -1,5 +1,6 @@
 export const site = {
   name: "Heess Reisen GmbH",
+  url: "https://heess-reisen.de",
   slogan: "Ihr WEG ist unser ZIEL!",
   quote:
     "„Fahre so viel oder so weit oder nicht so weit. Hauptsache, du fährst.“",
@@ -9,6 +10,8 @@ export const site = {
   email: "info@heess-reisen.de",
   addressLine: "Glockenstr. 83",
   city: "53844 Troisdorf",
+  postalCode: "53844",
+  locality: "Troisdorf",
   hours: "Mo. – Fr. 10.00 – 18.00",
 };
 

@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandHero } from "@/components/BrandHero";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Touristik",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Städtereisen & Pauschalreisen",
+  description:
+    "Städte-Kurztrips und Pauschalreisen mit dem Reisebus von Heess Reisen aus Troisdorf. Angebote folgen in Kürze – Gruppenreisen schon jetzt anfragen.",
+  path: "/touristik",
+});
 
 export default function TouristikPage() {
   return (

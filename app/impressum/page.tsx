@@ -1,25 +1,25 @@
 import type { Metadata } from "next";
 import { BrandHero } from "@/components/BrandHero";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Impressum",
-};
+  description:
+    "Impressum der Heess Reisen GmbH, Busunternehmen in der Glockenstr. 83, 53844 Troisdorf.",
+  path: "/impressum",
+});
 
 export default function ImpressumPage() {
   return (
     <main>
       <BrandHero title="Impressum" />
       <article className="prose-legal mx-auto max-w-3xl px-4 py-16 text-base leading-relaxed sm:px-6">
-        <p>
-          Anbieter: Heess Reisen GmbH Glockenstr. 83 53844 Troisdorf
-        </p>
+        <p>Anbieter: Heess Reisen GmbH Glockenstr. 83 53844 Troisdorf</p>
         <p className="mt-4">
           Eingetragen in das Handelsregister beim Amtsgericht Siegburg unter HRB
           920
         </p>
-        <p className="mt-4">
-          USt.-Id.-Nr. gemäß § 27 UStG: DE814185403
-        </p>
+        <p className="mt-4">USt.-Id.-Nr. gemäß § 27 UStG: DE814185403</p>
         <p className="mt-4">
           Vertretungsberechtigter Geschäftsführer: Oleksiy Kolomatskiy
         </p>
@@ -34,7 +34,9 @@ export default function ImpressumPage() {
         <h2 className="mt-10 font-serif text-3xl text-navy">
           Disclaimer – rechtliche Hinweise
         </h2>
-        <h3 className="mt-8 text-xl font-semibold">§ 1 Warnhinweis zu Inhalten</h3>
+        <h3 className="mt-8 text-xl font-semibold">
+          § 1 Warnhinweis zu Inhalten
+        </h3>
         <p className="mt-3 text-muted">
           Die kostenlosen und frei zugänglichen Inhalte dieser Webseite wurden
           mit größtmöglicher Sorgfalt erstellt. Der Anbieter dieser Webseite
@@ -49,19 +51,19 @@ export default function ImpressumPage() {
         </p>
         <h3 className="mt-8 text-xl font-semibold">§ 2 Externe Links</h3>
         <p className="mt-3 text-muted">
-          Diese Website enthält Verknüpfungen zu Websites Dritter
-          (&quot;externe Links&quot;). Diese Websites unterliegen der Haftung
-          der jeweiligen Betreiber. Der Anbieter hat bei der erstmaligen
-          Verknüpfung der externen Links die fremden Inhalte daraufhin
-          überprüft, ob etwaige Rechtsverstöße bestehen. Zu dem Zeitpunkt waren
-          keine Rechtsverstöße ersichtlich. Der Anbieter hat keinerlei Einfluss
-          auf die aktuelle und zukünftige Gestaltung und auf die Inhalte der
-          verknüpften Seiten. Das Setzen von externen Links bedeutet nicht, dass
-          sich der Anbieter die hinter dem Verweis oder Link liegenden Inhalte
-          zu Eigen macht. Eine ständige Kontrolle der externen Links ist für den
-          Anbieter ohne konkrete Hinweise auf Rechtsverstöße nicht zumutbar. Bei
-          Kenntnis von Rechtsverstößen werden jedoch derartige externe Links
-          unverzüglich gelöscht.
+          Diese Website enthält Verknüpfungen zu Websites Dritter (&quot;externe
+          Links&quot;). Diese Websites unterliegen der Haftung der jeweiligen
+          Betreiber. Der Anbieter hat bei der erstmaligen Verknüpfung der
+          externen Links die fremden Inhalte daraufhin überprüft, ob etwaige
+          Rechtsverstöße bestehen. Zu dem Zeitpunkt waren keine Rechtsverstöße
+          ersichtlich. Der Anbieter hat keinerlei Einfluss auf die aktuelle und
+          zukünftige Gestaltung und auf die Inhalte der verknüpften Seiten. Das
+          Setzen von externen Links bedeutet nicht, dass sich der Anbieter die
+          hinter dem Verweis oder Link liegenden Inhalte zu Eigen macht. Eine
+          ständige Kontrolle der externen Links ist für den Anbieter ohne
+          konkrete Hinweise auf Rechtsverstöße nicht zumutbar. Bei Kenntnis von
+          Rechtsverstößen werden jedoch derartige externe Links unverzüglich
+          gelöscht.
         </p>
         <h3 className="mt-8 text-xl font-semibold">
           § 3 Urheber- und Leistungsschutzrechte
@@ -103,10 +105,7 @@ export default function ImpressumPage() {
         </p>
         <p className="mt-3 text-muted">
           Die Europäische Online-Streitbeilegungs-Plattform ist hier zu finden:{" "}
-          <a
-            className="text-blue underline"
-            href="http://ec.europa.eu/odr"
-          >
+          <a className="text-blue underline" href="http://ec.europa.eu/odr">
             http://ec.europa.eu/odr
           </a>
           .
