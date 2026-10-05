@@ -90,7 +90,6 @@ export default function Home() {
               sizes="(min-width: 1280px) 512px, (min-width: 768px) 40vw, 100vw"
               className="object-cover"
               pan="up"
-              blur
             />
           </div>
           <div className="flex flex-col justify-center gap-10 px-6 py-12 sm:px-12">
