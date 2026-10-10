@@ -5,9 +5,9 @@ import { ScrollFrameAnimation } from "@/components/ScrollFrameAnimation";
 import { ScrollPanImage } from "@/components/ScrollPanImage";
 // Statisch importiert: die URL enthält einen Hash des Inhalts, ein neu
 // gespeichertes Bild wird daher nie aus einem Cache alt ausgeliefert
-import image01 from "@/public/image_01.webp";
-import image02 from "@/public/image_02.webp";
-import image03 from "@/public/image_03.webp";
+import image01 from "@/public/reisebus-heess-reisen.webp";
+import image02 from "@/public/werkstatt-bus-kontrolle.webp";
+import image03 from "@/public/kundenservice-heess-reisen.webp";
 import { pageMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 
@@ -31,13 +31,26 @@ const pillars = [
   "Auf die Wünsche unserer Kunden zugeschnittener Service",
 ];
 
-// Strukturierte Daten für Google: lokaler Betrieb mit Adresse, Kontakt und
-// Öffnungszeiten (wichtig für die lokale Suche und Google Maps)
+const services = [
+  "Bus mit Fahrer mieten",
+  "Transferfahrten",
+  "Betriebsausflüge",
+  "Schulfahrten",
+  "Vereinsfahrten",
+  "Mehrtägige und mehrwöchige Auslandsfahrten",
+];
+
+// Strukturierte Daten für Google und KI-Assistenten: lokaler Betrieb mit
+// Adresse, Kontakt, Öffnungszeiten und Leistungen (wichtig für die lokale
+// Suche, Google Maps und Empfehlungen), dazu die Website selbst
 const localBusiness = {
-  "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "@id": `${site.url}/#business`,
   name: site.name,
+  legalName: site.name,
+  alternateName: "Heess Reisen",
+  slogan: site.slogan,
+  vatID: "DE814185403",
   description:
     "Busunternehmen in Troisdorf: Reisebusse, Sprinter und VIP-Fahrzeuge mit Fahrer für Transferfahrten, Betriebsausflüge, Schul- und Vereinsfahrten sowie mehrtägige Auslandsfahrten.",
   url: site.url,
@@ -66,6 +79,45 @@ const localBusiness = {
     "Rhein-Sieg-Kreis",
     "Nordrhein-Westfalen",
   ],
+  hasMap: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    `${site.name}, ${site.addressLine}, ${site.city}`,
+  )}`,
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "Buchungsanfragen",
+    telephone: site.phoneTel,
+    email: site.email,
+    url: `${site.url}/kontakt`,
+    availableLanguage: "de",
+  },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Busvermietung mit Fahrer",
+    url: `${site.url}/fuhrpark`,
+    itemListElement: services.map((name) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name,
+        provider: { "@id": `${site.url}/#business` },
+      },
+    })),
+  },
+};
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    localBusiness,
+    {
+      "@type": "WebSite",
+      "@id": `${site.url}/#website`,
+      url: site.url,
+      name: "Heess Reisen",
+      inLanguage: "de-DE",
+      publisher: { "@id": `${site.url}/#business` },
+    },
+  ],
 };
 
 export default function Home() {
@@ -74,10 +126,14 @@ export default function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(localBusiness).replace(/</g, "\\u003c"),
+          __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
         }}
       />
-      <BrandHero kicker="Herzlich Willkommen bei" title="Heess Reisen GmbH" />
+      <BrandHero
+        kicker="Herzlich Willkommen bei"
+        title="Heess Reisen GmbH"
+        subtitle="Ihr Busunternehmen in Troisdorf"
+      />
 
       <ScrollFrameAnimation
         dir="/car_tilt"
@@ -114,9 +170,9 @@ export default function Home() {
             />
           </div>
           <div className="flex flex-col items-center justify-center px-6 py-12 text-center sm:px-12">
-            <p className="font-serif text-3xl sm:text-4xl">
+            <h2 className="font-serif text-3xl sm:text-4xl">
               Fragen Sie jetzt unverbindlich an!
-            </p>
+            </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
               Kontaktieren Sie uns und lassen Sie sich ein persönliches Angebot
               erstellen. Nutzen Sie dafür gerne unser Buchungsformular.
@@ -157,7 +213,7 @@ export default function Home() {
                 Unsere Busse werden periodisch kontrolliert.
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-muted">
-                Ständige technische Kotrollen und Überprüfungen, um
+                Ständige technische Kontrollen und Überprüfungen, um
                 sicherzustellen, dass unsere Fahrzeuge den Standards entsprechen
                 und sicher sind, sind für uns eine Selbstverständlichkeit.
               </p>
@@ -182,7 +238,11 @@ export default function Home() {
             <ol className="mt-8 grid gap-x-10 gap-y-6 sm:grid-cols-2">
               {pillars.map((item, index) => (
                 <li key={item} className="flex gap-4">
-                  <span className="font-serif text-3xl leading-none text-sky">
+                  {/* Nummer nur optisch, die Liste ist bereits nummeriert */}
+                  <span
+                    aria-hidden="true"
+                    className="font-serif text-3xl leading-none text-sky"
+                  >
                     0{index + 1}
                   </span>
                   <p className="text-lg leading-snug text-white/90">{item}</p>

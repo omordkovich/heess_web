@@ -8,6 +8,10 @@ const OG_IMAGE = {
   alt: "Reisebus, Doppeldecker und Kleinbus der Heess Reisen GmbH",
 };
 
+// Seiten ohne Suchwert: Platzhalter ohne Inhalt und reine Kontodaten. Sie
+// bleiben erreichbar, erscheinen aber nicht in Google und nicht in der Sitemap.
+export const NOINDEX_PATHS = new Set(["/touristik", "/bankverbindungen"]);
+
 export const DEFAULT_TITLE =
   "Busunternehmen in Troisdorf – Bus mit Fahrer mieten | Heess Reisen";
 
@@ -27,6 +31,9 @@ export function pageMetadata({
     ...(title ? { title } : {}),
     description,
     alternates: { canonical: path },
+    ...(NOINDEX_PATHS.has(path)
+      ? { robots: { index: false, follow: true } }
+      : {}),
     openGraph: {
       type: "website",
       locale: "de_DE",

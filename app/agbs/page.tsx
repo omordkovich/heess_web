@@ -18,6 +18,7 @@ export default function AgbsPage() {
         <div className="mt-8 grid gap-4">
           <a
             href="/AGB_Heess_Reisen_GmbH.pdf"
+            type="application/pdf"
             className="rounded-[24px] bg-white p-6 shadow-[0_12px_40px_rgba(11,39,68,0.06)] transition hover:-translate-y-0.5"
           >
             <p className="font-semibold text-navy">AGB_Heess_Reisen_GmbH.pdf</p>
@@ -25,6 +26,7 @@ export default function AgbsPage() {
           </a>
           <a
             href="/Reisebedingungen_Pauschalreisen.pdf"
+            type="application/pdf"
             className="rounded-[24px] bg-white p-6 shadow-[0_12px_40px_rgba(11,39,68,0.06)] transition hover:-translate-y-0.5"
           >
             <p className="font-semibold text-navy">

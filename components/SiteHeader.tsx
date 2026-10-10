@@ -92,7 +92,7 @@ export function SiteHeader() {
             >
               <Image
                 src="/heess_logo_s-v2.webp"
-                alt="heeß tours & travel services"
+                alt="Heess Reisen GmbH – zur Startseite"
                 width={256}
                 height={95}
                 priority
@@ -113,6 +113,7 @@ export function SiteHeader() {
                   <Link
                     key={item.href}
                     href={item.href}
+                    aria-current={active ? "page" : undefined}
                     className={`rounded-full px-3.5 py-2 text-sm transition ${
                       active
                         ? "bg-sky text-white"
@@ -181,6 +182,7 @@ export function SiteHeader() {
                     <Link
                       key={item.href}
                       href={item.href}
+                      aria-current={active ? "page" : undefined}
                       onClick={() => setOpen(false)}
                       className={`break-words rounded-2xl px-3 py-3 transition ${
                         active

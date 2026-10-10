@@ -3,7 +3,7 @@ import Link from "next/link";
 import { BrandHero } from "@/components/BrandHero";
 import { ScrollPanImage } from "@/components/ScrollPanImage";
 import { pageMetadata } from "@/lib/seo";
-import image04 from "@/public/image_04.webp";
+import image04 from "@/public/busfahrer-fahrgast.webp";
 
 export const metadata: Metadata = pageMetadata({
   title: "Reisebus & Sprinter mit Fahrer mieten",
@@ -21,12 +21,12 @@ const services = [
 ];
 
 const fleet = [
-  { title: "VIP 8-Sitzer", text: "VIP 8 - Sitzern" },
+  { title: "VIP 8-Sitzer", text: "VIP-Fahrzeug mit 8 Sitzplätzen" },
   { title: "Sprinter", text: "Sprinter mit 19 Sitzplätzen" },
-  { title: "Einstöckig", text: "einstöckigen -" },
+  { title: "Einstöckig", text: "Einstöckige Reisebusse" },
   {
     title: "Doppelstock",
-    text: "doppelstöckigen Reisebussen mit bis zu 91 Sitzplätzen.",
+    text: "Doppelstöckige Reisebusse mit bis zu 91 Sitzplätzen",
   },
 ];
 
@@ -63,7 +63,7 @@ export default function FuhrparkPage() {
             </ul>
             <p className="mt-8 text-lg leading-relaxed text-white/80">
               Fragen Sie jetzt nach Ihrem ganz persönlichen Angebot an und wir
-              liefern Ihnen eine, auf Ihre Bedürfnisse zugeschnittene Lösung,
+              liefern Ihnen eine auf Ihre Bedürfnisse zugeschnittene Lösung
               für Ihr Vorhaben.
             </p>
           </div>
@@ -71,14 +71,14 @@ export default function FuhrparkPage() {
         <h2 className="mt-14 font-serif text-3xl text-navy">
           Unser Fuhrpark reicht von:
         </h2>
-        <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {fleet.map((item) => (
-            <article key={item.title} className="rounded-[24px] bg-sand p-6">
+            <li key={item.title} className="rounded-[24px] bg-sand p-6">
               <h3 className="font-serif text-2xl text-navy">{item.title}</h3>
-              <p className="mt-3 text-muted">* {item.text}</p>
-            </article>
+              <p className="mt-3 text-muted">{item.text}</p>
+            </li>
           ))}
-        </div>
+        </ul>
         <p className="mt-8 text-lg text-navy">
           Sprechen Sie mit unseren Mitarbeitern. Wir finden ganz sicher für
           jeden Anlass das richtige Fahrzeug.
